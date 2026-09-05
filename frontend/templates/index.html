@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meridian — Transaction Risk Desk</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="frame">
+    <aside class="rail">
+      <div class="rail-brand">
+        <span class="rail-mark" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="17" cy="17" r="15.5" stroke="#A8BC6E" stroke-width="1.4"/>
+            <path d="M17 1.5C22.5 6.5 22.5 27.5 17 32.5" stroke="#A8BC6E" stroke-width="1.4" fill="none"/>
+            <path d="M17 1.5C11.5 6.5 11.5 27.5 17 32.5" stroke="#A8BC6E" stroke-width="1.4" fill="none" opacity="0.5"/>
+            <line x1="1.5" y1="17" x2="32.5" y2="17" stroke="#FFFFFF" stroke-width="1.6"/>
+          </svg>
+        </span>
+        <div>
+          <h1>Meridian</h1>
+          <p>Transaction Risk Desk</p>
+        </div>
+      </div>
+
+      <div class="rail-section">
+        <h2>Customers on file · {{ customers|length }}</h2>
+        <ul id="customer-list" class="customer-list">
+          {% for c in customers %}
+          <li>
+            <button class="customer-item" data-customer-id="{{ c.customer_id }}">
+              <span class="customer-avatar">{{ c.name[0] }}</span>
+              <span class="customer-text">
+                <span class="customer-name">{{ c.name }}</span>
+                <span class="customer-id">{{ c.customer_id }}</span>
+              </span>
+              <span class="customer-count">{{ c.transaction_count }}</span>
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="rail-footer">
+        <div class="footer-badge">
+          <span class="footer-dot"></span>
+          <span>Rules engine: deterministic</span>
+        </div>
+        <div class="footer-badge">
+          <span class="footer-dot gold"></span>
+          <span>Narrative: Gemini, cite-checked</span>
+        </div>
+        <p>Every flag traces to source transactions. Nothing shown here is invented.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div id="empty-state" class="empty-state">
+        <div class="empty-illustration" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="17" cy="17" r="15.5" stroke="#5A6B32" stroke-width="1.4"/>
+            <path d="M17 1.5C22.5 6.5 22.5 27.5 17 32.5" stroke="#5A6B32" stroke-width="1.4" fill="none"/>
+            <path d="M17 1.5C11.5 6.5 11.5 27.5 17 32.5" stroke="#5A6B32" stroke-width="1.4" fill="none" opacity="0.5"/>
+            <line x1="1.5" y1="17" x2="32.5" y2="17" stroke="#2B331F" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <h2>Select a customer to begin</h2>
+        <p>The desk reviews the customer's full transaction history against the standing risk rules and produces an investigation report — never a verdict. Choose a name from the left to open their case file.</p>
+      </div>
+
+      <div id="report" class="report hidden">
+        <header class="report-header">
+          <div>
+            <p class="eyebrow" id="report-customer-id"></p>
+            <h2 id="report-customer-name"></h2>
+          </div>
+          <div class="priority-badge" id="priority-badge">—</div>
+        </header>
+
+        <section class="assessment-block">
+          <h3>Overall assessment</h3>
+          <p id="overall-assessment">—</p>
+          <p class="meta-line" id="report-meta"></p>
+        </section>
+
+        <section class="findings-block">
+          <h3>Findings</h3>
+          <div id="findings-list" class="findings-list"></div>
+        </section>
+      </div>
+
+      <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Reviewing transaction history against risk rules…</p>
+      </div>
+
+      <div id="error-state" class="error-state hidden">
+        <h3>Couldn't complete the review</h3>
+        <p id="error-message"></p>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

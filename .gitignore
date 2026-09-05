@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+.env
+*.db
+.DS_Store
+   .env
+   llm_debug.log

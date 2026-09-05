@@ -1,0 +1,32 @@
+[
+  {
+    "rule_id": "R1_LARGE_TRANSFER",
+    "name": "Unusually Large Transfer",
+    "description": "A single transaction whose amount is more than 5x the customer's own median transaction amount, or exceeds ₹200,000, whichever is lower as a trigger threshold.",
+    "logic": "amount > max(5 * median_amount, 50000) AND amount > 200000_soft_flag_or_5x_median"
+  },
+  {
+    "rule_id": "R2_NEW_PAYEE_BURST",
+    "name": "Burst of Payments to a Newly Added Payee",
+    "description": "3 or more transactions to the same payee within a 72-hour window, where that payee had no transaction history with this customer in the 60 days prior to the first payment in the burst.",
+    "logic": "payee_transaction_count_in_72h >= 3 AND payee_first_seen_within_60_days"
+  },
+  {
+    "rule_id": "R3_ODD_HOURS",
+    "name": "Odd-Hours Activity",
+    "description": "A transaction timestamped between 00:00 and 05:00 local time, for a customer whose transaction history shows fewer than 5% of activity historically occurring in that window.",
+    "logic": "hour(txn_time) in [0,5) AND customer_odd_hour_rate < 0.05"
+  },
+  {
+    "rule_id": "R4_PATTERN_BREAK",
+    "name": "Break From Established Pattern",
+    "description": "A transaction whose category, channel, or geography is not present anywhere in the customer's prior 90-day history, combined with an amount above the customer's 75th percentile spend.",
+    "logic": "category_or_channel_or_geo NOT IN customer_90d_history AND amount > p75(customer_amounts)"
+  },
+  {
+    "rule_id": "R5_RAPID_DRAIN",
+    "name": "Rapid Sequential Drain",
+    "description": "3 or more outgoing transactions within a 24-hour window that cumulatively exceed 60% of the customer's average monthly outflow.",
+    "logic": "count_outgoing_24h >= 3 AND sum_outgoing_24h > 0.6 * avg_monthly_outflow"
+  }
+]
